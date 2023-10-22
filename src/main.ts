@@ -10,7 +10,11 @@ async function bootstrap() {
   app.use(compression());
   app.use(helmet());
   app.useGlobalPipes(new ValidationPipe({
-    whitelist: true
+    whitelist: true,
+    transform: true,
+    transformOptions: {
+      enableImplicitConversion: true
+    }
   }));
   await app.listen(6000);
 }
