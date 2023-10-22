@@ -3,8 +3,8 @@ import { ReportController } from './report.controller';
 import { ReportService } from './report.service';
 
 @Module({
-    imports: [],
-    controllers: [ReportController],
-    providers: [ReportService],
+  imports: [],
+  controllers: [ReportController],
+  providers: [ReportService],
 })
-export class ReportModule { }
+export class ReportModule {}
