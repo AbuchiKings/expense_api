@@ -1,6 +1,4 @@
-import { pick } from 'lodash';
-import { BadRequestException, Body, Controller, Delete, Get, HttpCode, NotFoundException, Param, Patch, Post } from "@nestjs/common";
-import { v4 as uuid } from 'uuid';
+import {Body, Controller, Delete, Get, HttpCode, Param, Patch, Post } from "@nestjs/common";
 import { ReportType, data } from "src/data";
 import { ReportService } from './report.service';
 
@@ -20,53 +18,18 @@ export class ReportController {
 
     @Post()
     createReport(@Body() body: { source: string, amount: number }, @Param('type') type: ReportType) {
-        const newReport = {
-            id: uuid(),
-            source: body.source,
-            amount: body.amount,
-            created_at: new Date(),
-            updated_at: new Date(),
-            type
-        }
-        data.report.push(newReport);
-        return newReport;
+        return this.reportService.createReport(body, type);
     }
 
     @Patch(':id')
     updateReport(@Body() body: { source?: string, amount?: number }, @Param('id') id: string, @Param('type') type: ReportType) {
-        let index: number;
-        let report = data.report
-            .find((report, idx) => {
-                index = idx;
-                return report.id === id
-            });
-
-        if (!report) throw new NotFoundException('Report not found.');
-
-        let updateData = pick(body, ['amount', 'source']);
-        let updatedReport = {
-            ...report,
-            ...updateData
-        }
-
-        data.report[index] = updatedReport;
-        return updatedReport;
+        return this.reportService.updateReport(body, id, type)
     }
 
     @HttpCode(204)
     @Delete(':id')
     deleteReport(@Param('id') id: string) {
-        let index: number;
-        let report = data.report
-            .find((report, idx) => {
-                index = idx;
-                return report.id === id
-            });
-
-        if (!report) throw new NotFoundException('Report not found.');
-
-        data.report.splice(index, 1)
-        return;
+        return this.reportService.deleteReport(id);
     }
 
 }
